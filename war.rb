@@ -1,3 +1,5 @@
+require 'pry-debugger'
+
 # This class is complete. You do not need to alter this
 class Card
   # Rank is the rank of the card, 2-10, J, Q, K, A
@@ -12,14 +14,28 @@ end
 
 class Deck
 
-  attr_accessor :deck, :p1deck, :p2deck
+  attr_accessor :unshuffled_deck, :deck
 
   def initialize
-    @deck = []
-    @p1deck = []
-    @p2deck = []
+    @deck = deck
+    @unshuffled_deck = []
   end
 
+  def make_deck
+    ranks = %w{2 3 4 5 6 7 8 9 10 J Q K A}
+    suits = %w{Spades Hearts Diamonds Clubs}
+    for suit in suits
+      ranks.size.times do |i|
+        @unshuffled_deck << Card.new(ranks[i], i+2, suit)
+      end
+    end
+    @unshuffled_deck
+  end
+
+  def shuffle_deck
+    @shuffled_deck = @unshuffled_deck.sort_by{rand}[0,52]
+    @shuffled_deck
+  end
 end
 
 # TODO: You will need to complete the methods in this class
