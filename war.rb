@@ -14,11 +14,13 @@ end
 
 class Deck
 
-  attr_accessor :unshuffled_deck, :deck
+  attr_accessor :unshuffled_deck, :shuffled_deck, :player1_hand, :player2_hand
 
   def initialize
-    @deck = deck
+    @shuffled_deck = []
     @unshuffled_deck = []
+    @player1_hand = []
+    @player2_hand = []
   end
 
   def make_deck
@@ -34,31 +36,18 @@ class Deck
 
   def shuffle_deck
     @shuffled_deck = @unshuffled_deck.sort_by{rand}[0,52]
-    @shuffled_deck
+    @player1_hand << @shuffled_deck[0..25]
+    @player2_hand << @shuffled_deck[26..52]
   end
-end
-
-# TODO: You will need to complete the methods in this class
-class PlayCard
-  attr_accessor :player1_deck, :player2_deck
-
+binding.pry
   # Given a card, insert it on the bottom your deck
-  def add_card(card)
+  def add_card(cards)
 
-  end
-
-  # Mix around the order of the cards in your deck
-  def shuffle_hand # You can't use .shuffle!
 
   end
 
   # Remove the top card from your deck and return it
-  def deal_card
-
-  end
-
-  # Reset this deck with 52 cards
-  def create_52_card_deck
+  def deal_card(player1_hand, player2_hand)
 
   end
 
@@ -68,14 +57,15 @@ end
 class Player
   def initialize(name)
     @name = name
-    @hand = Deck.new
+    @deck = Deck.new
+    @deck.make_deck
+    @deck.shuffle_deck
   end
 end
 
 
 class War
   def initialize(player1, player2)
-    @deck = Deck.new
     @player1 = Player.new(player1)
     @player2 = Player.new(player2)
     # You will need to shuffle and pass out the cards to each player
@@ -83,7 +73,11 @@ class War
 
   # You will need to play the entire game in this method using the WarAPI
   def play_game
-    # WarAPI.play_turn()
+    WarAPI.play_turn(@player1, @player2)
+  end
+
+  def self.card
+    hash = War.play_game
   end
 end
 
