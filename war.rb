@@ -2,6 +2,7 @@ require 'pry-debugger'
 
 # This class is complete. You do not need to alter this
 class Card
+  attr_accessor :rank, :value, :suit
   # Rank is the rank of the card, 2-10, J, Q, K, A
   # Value is the numeric value of the card, so J = 11, A = 14
   # Suit is the suit of the card, Spades, Diamonds, Clubs or Hearts

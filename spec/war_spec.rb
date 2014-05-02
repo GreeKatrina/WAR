@@ -4,7 +4,7 @@ require 'pry-debugger'
 require_relative '../war.rb'
 
 describe "Card" do
-	xit "can make a new card" do
+	it "can make a new card" do
 		card = Card.new(2, 2, 'Spades')
 		expect(card.rank).to eq(2)
 		expect(card.value).to eq(2)
@@ -14,10 +14,19 @@ end
 
 describe 'Deck' do
 
-	xit "should be able to create a deck of cards" do
+	before(:each) do
+    	@deck = Deck.new
+    	@deck = @deck.make_deck
+  	end
+
+	it "should be able to create a deck of cards" do
+		expect(@deck.length).to eq(52)
 	end
 
-	xit "should shuffle a deck of cards" do
+	it "should shuffle a deck of cards" do
+		deck = Deck.new
+		deck = deck.make_deck
+		expect(deck).not_to eq(@deck)
 	end
 
 	xit "should take a card and insert it at the front of a player's hand" do
