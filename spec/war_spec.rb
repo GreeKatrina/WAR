@@ -4,7 +4,12 @@ require 'pry-debugger'
 require_relative '../war.rb'
 
 describe "Card" do
-
+	xit "can make a new card" do
+		card = Card.new(2, 2, 'Spades')
+		expect(card.rank).to eq(2)
+		expect(card.value).to eq(2)
+		expect(card.suit).to eq('Spades')
+	end
 end
 
 describe 'Deck' do
