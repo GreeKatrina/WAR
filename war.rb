@@ -42,8 +42,8 @@ class Deck
 
   # Remove the top card from your deck and return it
   def deal_card
-    @playhand1 = @player1.hand
-    @playhand2 = @player2.hand
+    @player1.hand
+    @player2.hand
   end
 
 end
@@ -55,7 +55,7 @@ class Player
 
   def initialize(name)
     @name = name
-    @hand = []
+    @hand = nil
   end
 end
 
@@ -68,9 +68,9 @@ class War
     @player1 = Player.new(player1)
     @player2 = Player.new(player2)
     @deck = Deck.new
-    @deck.make_deck
-    @player1.hand << @deck[0..25]
-    @player2.hand << @deck[26..52]
+    @deck = @deck.make_deck
+    @player1.hand = @deck.slice(0,26)
+    @player2.hand = @deck.slice(26,26)
     # You will need to shuffle and pass out the cards to each player
   end
 
