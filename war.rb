@@ -15,11 +15,12 @@ end
 
 class Deck
 
-  attr_accessor :unshuffled_deck, :shuffled_deck
+  attr_accessor :unshuffled_deck, :shuffled_deck, :card1, :card2
 
   def initialize
     @shuffled_deck = []
     @unshuffled_deck = []
+    @x = 0
   end
 
   def make_deck
@@ -34,6 +35,13 @@ class Deck
     @shuffled_deck
   end
 
+  def split_deck
+    for x in (0..51)
+      @player1.hand << @shuffled_deck[x] if x < 26
+      @player2.hand << @shuffled_deck[x] if x > 25
+    end
+  end
+
   # Given a card, insert it on the bottom your deck
   def add_card(cards)
     @addhand1 = []
@@ -42,8 +50,18 @@ class Deck
 
   # Remove the top card from your deck and return it
   def deal_card
-    @player1.hand
-    @player2.hand
+    if self == @player1.hand
+      @player1.hand = @addhand1 if @player1.hand[-1] == nil
+      @card1 = @player1.hand[@x]
+      @player1.hand[@x] = nil
+      return @card1
+    else
+      @player2.hand = @addhand2 if @player2.hand[-1] == nil
+      @card2 = @player2.hand[@x]
+      @player2.hand[@x] = nil
+      return @card2
+    end
+    @x+=1
   end
 
 end
@@ -55,7 +73,7 @@ class Player
 
   def initialize(name)
     @name = name
-    @hand = nil
+    @hand = []
   end
 end
 
@@ -69,8 +87,7 @@ class War
     @player2 = Player.new(player2)
     @deck = Deck.new
     @deck = @deck.make_deck
-    @player1.hand = @deck.slice(0,26)
-    @player2.hand = @deck.slice(26,26)
+
     # You will need to shuffle and pass out the cards to each player
   end
 
@@ -78,8 +95,8 @@ class War
   def play_game
     while @player1.hand > 0 && @player2.hand > 0
       hash = WarAPI.play_turn(@player1, @player1.hand.deal_card, @player2, @player2.hand.deal_card)
-      @player1.hand.add_card(hash[:player1])
-      @player2.hand.add_card(hash[:player2])
+      @player1.hand.add_card(hash['@player1'])
+      @player2.hand.add_card(hash['@player2'])
     end
   end
 end

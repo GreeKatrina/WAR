@@ -16,6 +16,7 @@ end
 describe 'Deck' do
 
 	before(:each) do
+		@war = War.new('Katrina', 'Caresa')
 		@deck = Deck.new
 		@deck = @deck.make_deck
 	end
@@ -30,10 +31,16 @@ describe 'Deck' do
 		expect(deck).not_to eq(@deck)
 	end
 
+	it "should split the deck and give each player a hand" do
+		expect(@war.player1.hand.length).to eq(26)
+		expect(@war.player2.hand.length).to eq(26)
+	end
+
 	it "should take a card and insert it at the front of a player's hand" do
 	end
 
-	xit "should be able to remove a card from the end of a player's hand and return it" do
+	it "should be able to remove a card from the end of a player's hand and return it" do
+		expect(@war.player1.hand.deal_card).to be_instance_of(Card)
 	end
 end
 
@@ -43,11 +50,11 @@ describe 'Player' do
 		@player2 = Player.new('Caresa')
 	end
 
-	it "should be able to assign two players a name and give them a hand equal to nil" do
+	it "should be able to assign two players a name and give them each an empty array" do
 		expect(@player.name).to eq('Katrina')
 		expect(@player2.name).to eq('Caresa')
-		expect(@player.hand).to eq(nil)
-		expect(@player2.hand).to eq(nil)
+		expect(@player.hand).to eq([])
+		expect(@player2.hand).to eq([])
 	end
 end
 
@@ -58,8 +65,6 @@ describe 'War' do
 
 	describe 'initialize' do
 		it "should create a new deck and give two players an equal sized hand" do
-			expect(war.player1.hand.length).to eq(26)
-			expect(war.player2.hand.length).to eq(26)
 		end
 	end
 
