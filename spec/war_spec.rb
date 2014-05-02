@@ -16,7 +16,7 @@ end
 describe 'Deck' do
 
 	before(:each) do
-		@war = War.new('Katrina', 'Caresa')
+		@war = War.new("Katrina", "Caresa")
 		@deck = Deck.new
 		@deck = @deck.make_deck
 	end
@@ -32,8 +32,8 @@ describe 'Deck' do
 	end
 
 	it "should split the deck and give each player a hand" do
-		expect(@war.player1.hand.length).to eq(26)
-		expect(@war.player2.hand.length).to eq(26)
+		expect(@war.player1.hand.unshuffled_deck.length).to eq(26)
+		expect(@war.player2.hand.unshuffled_deck.length).to eq(26)
 	end
 
 	it "should take a card and insert it at the front of a player's hand" do
@@ -53,8 +53,8 @@ describe 'Player' do
 	it "should be able to assign two players a name and give them each an empty array" do
 		expect(@player.name).to eq('Katrina')
 		expect(@player2.name).to eq('Caresa')
-		expect(@player.hand).to eq([])
-		expect(@player2.hand).to eq([])
+		expect(@player.hand.unshuffled_deck).to eq([])
+		expect(@player2.hand.unshuffled_deck).to eq([])
 	end
 end
 

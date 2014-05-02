@@ -32,14 +32,6 @@ class Deck
       end
     end
     @shuffled_deck = @unshuffled_deck.sort_by{rand}[0,52]
-    @shuffled_deck
-  end
-
-  def split_deck
-    for x in (0..51)
-      @player1.hand << @shuffled_deck[x] if x < 26
-      @player2.hand << @shuffled_deck[x] if x > 25
-    end
   end
 
   # Given a card, insert it on the bottom your deck
@@ -50,17 +42,10 @@ class Deck
 
   # Remove the top card from your deck and return it
   def deal_card
-    if self == @player1.hand
-      @player1.hand = @addhand1 if @player1.hand[-1] == nil
-      @card1 = @player1.hand[@x]
-      @player1.hand[@x] = nil
-      return @card1
-    else
-      @player2.hand = @addhand2 if @player2.hand[-1] == nil
-      @card2 = @player2.hand[@x]
-      @player2.hand[@x] = nil
-      return @card2
-    end
+    @unshuffled_deck = @ad1 if @unshuffled_deck[-1] == nil
+    @card1 = @unshuffled_deck[@x]
+    @unshuffled_deck[@x] = nil
+    return @card1
     @x+=1
   end
 
@@ -73,7 +58,7 @@ class Player
 
   def initialize(name)
     @name = name
-    @hand = []
+    @hand = Deck.new
   end
 end
 
@@ -87,7 +72,10 @@ class War
     @player2 = Player.new(player2)
     @deck = Deck.new
     @deck = @deck.make_deck
-
+    for x in (0..51)
+      @player1.hand.unshuffled_deck << @deck[x] if x < 26
+      @player2.hand.unshuffled_deck << @deck[x] if x > 25
+    end
     # You will need to shuffle and pass out the cards to each player
   end
 
