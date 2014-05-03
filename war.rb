@@ -69,13 +69,15 @@ end
 
 class War
   
-  attr_accessor :player1, :player2, :deck
+  attr_accessor :player1, :player2, :deck, :winner, :turns
 
   def initialize(player1, player2)
     @player1 = Player.new(player1)
     @player2 = Player.new(player2)
     @deck = Deck.new
     @deck = @deck.make_deck
+    @winner = winner
+    @turns = 0
     for x in (0..51)
       @player1.hand.unshuffled_deck << @deck[x] if x < 26
       @player2.hand.unshuffled_deck << @deck[x] if x > 25
@@ -85,17 +87,21 @@ class War
 
   # You will need to play the entire game in this method using the WarAPI
   def play_game
-    turns = 0
     begin
       hash = WarAPI.play_turn(@player1, @player1.hand.deal_card, @player2, @player2.hand.deal_card)
       cards = hash.flatten
       @player1.hand.add_card(cards[1])
       @player2.hand.add_card(cards[3])
       puts "#{turns}"
-      turns += 1
+      @turns += 1
     end until (@player1.hand.addhand.length == 0 && @player1.hand.unshuffled_deck[-1] == nil && cards[1].length == 0) || (@player2.hand.addhand.length == 0 && @player2.hand.unshuffled_deck[-1] == nil && cards[3].length == 0)
-    puts "#{@player1.name} wins!" if @player1.hand.deal_card != nil
-    puts "#{@player2.name} wins!" if @player2.hand.deal_card != nil
+    if (@player1.hand.addhand.length == 0 && @player1.hand.unshuffled_deck[-1] == nil && cards[1].length == 0)
+      puts "#{@player2.name} wins!"
+      @winner = @player2.name
+    else
+      puts "#{@player1.name} wins!"
+      @winner = @player1.name
+    end
   end
 
 end

@@ -64,5 +64,16 @@ describe 'War' do
 
 	let(:war) { War.new('Katrina', 'Caresa') }
 
-	
+	describe 'play_game' do
+		it 'should see who wins the game' do
+			war.play_game
+			if war.winner == 'Katrina'
+				expect(war.player2.hand.addhand).to eq([])
+				(war.player1.hand.addhand.length + war.player1.hand.unshuffled_deck.length).should be >= 52
+			else
+				expect(war.player1.hand.addhand).to eq([])
+				(war.player2.hand.addhand.length + war.player2.hand.unshuffled_deck.length).should be >= 52
+			end
+		end
+	end
 end
