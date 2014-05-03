@@ -15,7 +15,7 @@ end
 
 class Deck
 
-  attr_accessor :unshuffled_deck, :shuffled_deck
+  attr_accessor :unshuffled_deck, :shuffled_deck, :x, :emptyarray, :addhand
 
   def initialize
     @shuffled_deck = []
@@ -86,16 +86,16 @@ class War
   # You will need to play the entire game in this method using the WarAPI
   def play_game
     turns = 0
-    while @player1.hand.deal_card != nil && @player2.hand.deal_card != nil
+    begin
       hash = WarAPI.play_turn(@player1, @player1.hand.deal_card, @player2, @player2.hand.deal_card)
       cards = hash.flatten
       @player1.hand.add_card(cards[1])
       @player2.hand.add_card(cards[3])
       puts "#{turns}"
       turns += 1
-    end
-    puts "#{@player1} wins!" if @player1.hand.deal_card != nil
-    puts "#{@player2} wins!" if @player2.hand.deal_card != nil
+    end until (@player1.hand.addhand.length == 0 && @player1.hand.unshuffled_deck[-1] == nil && cards[1].length == 0) || (@player2.hand.addhand.length == 0 && @player2.hand.unshuffled_deck[-1] == nil && cards[3].length == 0)
+    puts "#{@player1.name} wins!" if @player1.hand.deal_card != nil
+    puts "#{@player2.name} wins!" if @player2.hand.deal_card != nil
   end
 
 end
