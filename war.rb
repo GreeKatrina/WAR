@@ -15,11 +15,13 @@ end
 
 class Deck
 
-  attr_accessor :unshuffled_deck, :shuffled_deck, :card1, :card2
+  attr_accessor :unshuffled_deck, :shuffled_deck
 
   def initialize
     @shuffled_deck = []
     @unshuffled_deck = []
+    @addhand = []
+    @emptyarray = []
     @x = 0
   end
 
@@ -35,20 +37,22 @@ class Deck
   end
 
   # Given a card, insert it on the bottom your deck
-  def add_card(cards)
-    @addhand1 = []
-    @addhand2 = []
+  def add_card(card)
+    @addhand = @addhand + card
   end
 
   # Remove the top card from your deck and return it
   def deal_card
-    @unshuffled_deck = @ad1 if @unshuffled_deck[-1] == nil
-    @card1 = @unshuffled_deck[@x]
+    if @unshuffled_deck[-1] == nil
+      @unshuffled_deck = @addhand
+      @addhand = @emptyarray
+      @x = 0
+    end
+    card = @unshuffled_deck[@x]
     @unshuffled_deck[@x] = nil
-    return @card1
     @x+=1
+    return card
   end
-
 end
 
 # You may or may not need to alter this class
@@ -81,22 +85,30 @@ class War
 
   # You will need to play the entire game in this method using the WarAPI
   def play_game
-    while @player1.hand > 0 && @player2.hand > 0
+    turns = 0
+    while @player1.hand.deal_card != nil && @player2.hand.deal_card != nil
       hash = WarAPI.play_turn(@player1, @player1.hand.deal_card, @player2, @player2.hand.deal_card)
-      @player1.hand.add_card(hash['@player1'])
-      @player2.hand.add_card(hash['@player2'])
+      cards = hash.flatten
+      @player1.hand.add_card(cards[1])
+      @player2.hand.add_card(cards[3])
+      puts "#{turns}"
+      turns += 1
     end
+    puts "#{@player1} wins!" if @player1.hand.deal_card != nil
+    puts "#{@player2} wins!" if @player2.hand.deal_card != nil
   end
+
 end
 
 
 class WarAPI
   # This method will take a card from each player and
   # return a hash with the cards that each player should receive
+
   def self.play_turn(player1, card1, player2, card2)
     if card1.value > card2.value
       {player1 => [card1, card2], player2 => []}
-    elsif card2.value > card1.value || Rand(100).even?
+    elsif card2.value > card1.value || rand(100).even?
       {player1 => [], player2 => [card2, card1]}
     else
       {player1 => [card1, card2], player2 => []}

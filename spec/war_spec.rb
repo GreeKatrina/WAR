@@ -37,10 +37,12 @@ describe 'Deck' do
 	end
 
 	it "should take a card and insert it at the front of a player's hand" do
+		
 	end
 
 	it "should be able to remove a card from the end of a player's hand and return it" do
 		expect(@war.player1.hand.deal_card).to be_instance_of(Card)
+		expect(@war.player2.hand.deal_card).to be_instance_of(Card)
 	end
 end
 
@@ -60,12 +62,7 @@ end
 
 describe 'War' do
 
-
 	let(:war) { War.new('Katrina', 'Caresa') }
 
-	describe 'initialize' do
-		it "should create a new deck and give two players an equal sized hand" do
-		end
-	end
-
+	
 end
