@@ -37,7 +37,8 @@ describe 'Deck' do
 	end
 
 	it "should take a card and insert it at the front of a player's hand" do
-		
+		expect(@war.player1.hand.addhand).to eq([])
+		expect{deck.add_card(card).to_not raise_error}
 	end
 
 	it "should be able to remove a card from the end of a player's hand and return it" do

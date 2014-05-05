@@ -68,7 +68,7 @@ end
 
 
 class War
-  
+
   attr_accessor :player1, :player2, :deck, :winner, :turns
 
   def initialize(player1, player2)
@@ -103,7 +103,6 @@ class War
       @winner = @player1.name
     end
   end
-
 end
 
 
