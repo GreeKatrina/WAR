@@ -36,23 +36,23 @@ class Deck
     @shuffled_deck = @unshuffled_deck.sort_by{rand}[0,52]
   end
 
-  # Given a card, insert it on the bottom your deck
-  def add_card(card)
-    @addhand = @addhand + card
-  end
+  # # Given a card, insert it on the bottom your deck
+  # def add_card(card)
+  #   @addhand = @addhand + card
+  # end
 
-  # Remove the top card from your deck and return it
-  def deal_card
-    if @unshuffled_deck[-1] == nil
-      @unshuffled_deck = @addhand
-      @addhand = @emptyarray
-      @x = 0
-    end
-    card = @unshuffled_deck[@x]
-    @unshuffled_deck[@x] = nil
-    @x+=1
-    return card
-  end
+  # # Remove the top card from your deck and return it
+  # def deal_card
+  #   if @unshuffled_deck[-1] == nil
+  #     @unshuffled_deck = @addhand
+  #     @addhand = @emptyarray
+  #     @x = 0
+  #   end
+  #   card = @unshuffled_deck[@x]
+  #   @unshuffled_deck[@x] = nil
+  #   @x+=1
+  #   return card
+  # end
 end
 
 class Node
@@ -76,10 +76,15 @@ class Queue
   end
 
   def play_card
-    card = @start.card
-    @start.start = false
-    @start = @start.child
-    @start.start = true
+    if @start.child == nil
+      card = @start.card
+      @start = nil
+    else
+      card = @start.card
+      @start.start = false
+      @start = @start.child
+      @start.start = true
+    end
     @counter -= 1
     return card
   end
@@ -94,6 +99,7 @@ class Queue
       @last = node
     else
       @last.child = node
+      @last.last = false
       @last = node
     end
     @counter += 1
@@ -141,12 +147,12 @@ class War
         @player1.hand.add_card(cards[1][0])
         @player1.hand.add_card(cards[1][1])
       else
-        @player2.hand.add_card(cards[1][0])
-        @player2.hand.add_card(cards[1][1])
+        @player2.hand.add_card(cards[3][0])
+        @player2.hand.add_card(cards[3][1])
       end
-      puts "#{turns}"
+      puts "#{@turns}"
       @turns += 1
-    end until (@player1.hand.start == nil || @player2.hand.start == nil)
+    end until @player1.hand.start == nil || @player2.hand.start == nil
     if (@player1.hand.start == nil)
       puts "#{@player2.name} wins!"
       @winner = @player2.name

@@ -60,10 +60,10 @@ describe 'War' do
 			war.play_game
 			if war.winner == 'Katrina'
 				expect(war.player2.hand.counter).to eq(0)
-				(war.player1.hand.counter).should be = 52
+				expect(war.player1.hand.counter).to eq(52)
 			else
 				expect(war.player1.hand.counter).to eq(0)
-				(war.player2.hand.counter).should be = 52
+				expect(war.player2.hand.counter).to eq(52)
 			end
 		end
 	end
