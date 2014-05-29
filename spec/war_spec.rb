@@ -32,32 +32,22 @@ describe 'Deck' do
 	end
 
 	it "should split the deck and give each player a hand" do
-		expect(@war.player1.hand.unshuffled_deck.length).to eq(26)
-		expect(@war.player2.hand.unshuffled_deck.length).to eq(26)
+		expect(@war.player1.hand.counter).to eq(26)
+		expect(@war.player2.hand.counter).to eq(26)
 	end
 
 	it "should take a card and insert it at the front of a player's hand" do
-		expect(@war.player1.hand.addhand).to eq([])
-		expect{deck.add_card(card).to_not raise_error}
+		expect(@war.player1.hand.start).to be_a(Node)
+		expect(@war.player1.hand.start.card).to be_a(Card)
 	end
 
 	it "should be able to remove a card from the end of a player's hand and return it" do
-		expect(@war.player1.hand.deal_card).to be_instance_of(Card)
-		expect(@war.player2.hand.deal_card).to be_instance_of(Card)
-	end
-end
-
-describe 'Player' do
-	before(:each) do
-		@player = Player.new('Katrina')
-		@player2 = Player.new('Caresa')
-	end
-
-	it "should be able to assign two players a name and give them each an empty array" do
-		expect(@player.name).to eq('Katrina')
-		expect(@player2.name).to eq('Caresa')
-		expect(@player.hand.unshuffled_deck).to eq([])
-		expect(@player2.hand.unshuffled_deck).to eq([])
+		start = @war.player1.hand.start
+		child = start.child
+		card = @war.player1.hand.play_card
+		expect(start.start).to eq(false)
+		expect(child.start).to eq(true)
+		expect(card).to be_a(Card)
 	end
 end
 
@@ -69,11 +59,11 @@ describe 'War' do
 		it 'should see who wins the game' do
 			war.play_game
 			if war.winner == 'Katrina'
-				expect(war.player2.hand.addhand).to eq([])
-				(war.player1.hand.addhand.length + war.player1.hand.unshuffled_deck.length).should be >= 52
+				expect(war.player2.hand.counter).to eq(0)
+				(war.player1.hand.counter).should be = 52
 			else
-				expect(war.player1.hand.addhand).to eq([])
-				(war.player2.hand.addhand.length + war.player2.hand.unshuffled_deck.length).should be >= 52
+				expect(war.player1.hand.counter).to eq(0)
+				(war.player2.hand.counter).should be = 52
 			end
 		end
 	end

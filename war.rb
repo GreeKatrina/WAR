@@ -55,6 +55,51 @@ class Deck
   end
 end
 
+class Node
+  attr_accessor :last, :start, :parent, :child, :card
+  def initialize(params)
+    params ||= nil
+    @last = params[:last] # boolean
+    @start = params[:start] # boolean
+    @parent = params[:parent]
+    @child = params[:child] ||= nil
+    @card = params[:card]
+  end
+end
+
+class Queue
+  attr_accessor :last, :start, :counter
+  def initialize
+    @last = nil # node
+    @start = nil # node
+    @counter = 0
+  end
+
+  def play_card
+    card = @start.card
+    @start.start = false
+    @start = @start.child
+    @start.start = true
+    @counter -= 1
+    return card
+  end
+
+  def add_card(card)
+    node = Node.new(last: true, start: false, parent: @last, card: card)
+    if @start == nil
+      node.start = true
+      @start = node
+    end
+    if @last == nil
+      @last = node
+    else
+      @last.child = node
+      @last = node
+    end
+    @counter += 1
+  end
+end
+
 # You may or may not need to alter this class
 class Player
 
@@ -62,7 +107,7 @@ class Player
 
   def initialize(name)
     @name = name
-    @hand = Deck.new
+    @hand = Queue.new
   end
 end
 
@@ -71,6 +116,8 @@ class War
 
   attr_accessor :player1, :player2, :deck, :winner, :turns
 
+  # Create a new deck in the Deck class
+  # Make a new Queue instance for each player, which will be their hands
   def initialize(player1, player2)
     @player1 = Player.new(player1)
     @player2 = Player.new(player2)
@@ -79,8 +126,8 @@ class War
     @winner = winner
     @turns = 0
     for x in (0..51)
-      @player1.hand.unshuffled_deck << @deck[x] if x < 26
-      @player2.hand.unshuffled_deck << @deck[x] if x > 25
+      @player1.hand.add_card(@deck[x]) if x < 26
+      @player2.hand.add_card(@deck[x]) if x > 25
     end
     # You will need to shuffle and pass out the cards to each player
   end
@@ -88,14 +135,19 @@ class War
   # You will need to play the entire game in this method using the WarAPI
   def play_game
     begin
-      hash = WarAPI.play_turn(@player1, @player1.hand.deal_card, @player2, @player2.hand.deal_card)
+      hash = WarAPI.play_turn(@player1, @player1.hand.play_card, @player2, @player2.hand.play_card)
       cards = hash.flatten
-      @player1.hand.add_card(cards[1])
-      @player2.hand.add_card(cards[3])
+      if cards[1].length == 2
+        @player1.hand.add_card(cards[1][0])
+        @player1.hand.add_card(cards[1][1])
+      else
+        @player2.hand.add_card(cards[1][0])
+        @player2.hand.add_card(cards[1][1])
+      end
       puts "#{turns}"
       @turns += 1
-    end until (@player1.hand.addhand.length == 0 && @player1.hand.unshuffled_deck[-1] == nil && cards[1].length == 0) || (@player2.hand.addhand.length == 0 && @player2.hand.unshuffled_deck[-1] == nil && cards[3].length == 0)
-    if (@player1.hand.addhand.length == 0 && @player1.hand.unshuffled_deck[-1] == nil && cards[1].length == 0)
+    end until (@player1.hand.start == nil || @player2.hand.start == nil)
+    if (@player1.hand.start == nil)
       puts "#{@player2.name} wins!"
       @winner = @player2.name
     else
